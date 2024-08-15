@@ -667,20 +667,20 @@ const ControleCaixaExpedicao = () => {
             label="Tempo Médio na Fila"
             value={
               filaPedidos.length > 0
-                ? Math.round(
+                ? `${Math.round(
                     filaPedidos.reduce(
                       (total, pedido) =>
                         total +
-                        (new Date().getTime() -
-                          new Date(pedido.horario).getTime()) /
+                        (new Date().getTime() - new Date(pedido.horario).getTime()) /
                           60000,
                       0
                     ) / filaPedidos.length
-                  )
-                : 0
+                  )} min`
+                : '0 min'
             }
             color="green"
           />
+
           <PanelCard
             icon={<AlertTriangle size={24} />}
             label="Pedidos Prioritários"
