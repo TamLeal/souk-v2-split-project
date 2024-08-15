@@ -13,7 +13,9 @@ import Esquecidos from './Pedidos/Esquecidos';
 import ResumoEvento from './Painel/ResumoEvento';
 import HistoricoAcoes from './Painel/HistoricoAcoes';
 import PanelCard from './shared/PanelCard';
-import { ChefHat, Clock, AlertTriangle, Settings } from './shared/Icones';
+
+import { ChefHat, Clock, AlertTriangle, FaHamburger, CiFries, Settings } from './shared/Icones'; // Certifique-se de importar os ícones corretos
+
 
 // Rest of your component code...
 
@@ -660,6 +662,11 @@ const ControleCaixaExpedicao = () => {
               (total, key) => total + contadorFila[key],
               0
             )}
+            items={Object.entries(contadorFila).map(([name, quantity]) => ({
+              icon: name === 'KFT' ? <FaHamburger /> : name === 'Fritas' ? <CiFries /> : null,
+              name,
+              quantity,
+            }))}
             color="blue"
           />
           <PanelCard
