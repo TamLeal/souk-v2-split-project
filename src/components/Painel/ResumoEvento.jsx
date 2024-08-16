@@ -47,7 +47,7 @@ const ResumoEvento = ({
   }, [historicoVendas, produtos]);
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
+    <div className="bg-white p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg mb-8">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold text-gray-800">Resumo do Evento</h2>
         <div className="flex space-x-2">
