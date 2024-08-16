@@ -8,15 +8,27 @@ const HistoricoAcoes = ({
 }) => {
   return (
     <div
-      className={`bg-white p-6 rounded-lg shadow-md mt-10 cursor-pointer transition-all duration-300 ease-in-out ${
+      className={`${
         mostrarHistorico
-          ? 'max-h-64 overflow-y-auto py-4'
-          : 'max-h-14 py-2 flex items-center'
+          ? 'rounded-lg shadow-md mt-10 cursor-pointer transition-all duration-300 ease-in-out max-h-64 overflow-y-auto py-4 bg-white p-6'
+          : 'cursor-pointer'
       }`}
       onClick={() => setMostrarHistorico(!mostrarHistorico)}
+      style={{
+        maxWidth: mostrarHistorico ? '50%' : 'fit-content', // O contêiner se adapta ao conteúdo quando fechado
+      }}
     >
-      <h2 className="text-xl font-bold text-gray-800 flex items-center">
-        <ClipboardList className="mr-2" size={24} />
+      <h2
+        className="text-base font-medium text-gray-800 flex items-center"
+        style={{
+          boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', // Sombra ao redor do texto
+          backgroundColor: '#f0f0f0', // Fundo cinza claro ao redor do texto
+          padding: '0.5rem 1rem', // Espaçamento ao redor do texto
+          borderRadius: '0.375rem', // Arredonda os cantos
+          transition: 'box-shadow 0.3s ease-in-out', // Transição suave
+        }}
+      >
+        <ClipboardList className="mr-2" size={16} />
         Histórico de Ações
       </h2>
       {mostrarHistorico && historicoAcoes.length > 0 ? (
@@ -24,9 +36,10 @@ const HistoricoAcoes = ({
           {historicoAcoes.map((acao, index) => (
             <li
               key={index}
-              className={`mb-2 p-4 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm ${
-                index === 0 ? 'mt-2' : ''
-              }`}
+              className="mb-2 p-4 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm"
+              style={{
+                maxWidth: '100%', // Garante que os itens do histórico ocupem a largura do contêiner pai
+              }}
             >
               {acao}
             </li>

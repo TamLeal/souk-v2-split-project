@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Download } from 'lucide-react';
 import Chart from 'chart.js/auto';
+import HistoricoAcoes from './HistoricoAcoes';  // Importa o componente HistoricoAcoes
 
 const ResumoEvento = ({
   historicoVendas,
@@ -8,6 +9,9 @@ const ResumoEvento = ({
   exportarCSV,
   limparDadosPersistidos,
   produtos,
+  historicoAcoes,  // Adiciona as props necessárias para o HistoricoAcoes
+  mostrarHistorico,
+  setMostrarHistorico,
 }) => {
   const chartRef = useRef(null);
 
@@ -84,6 +88,15 @@ const ResumoEvento = ({
             R$ {faturamentoTotal.toFixed(2)}
           </span>
         </div>
+      </div>
+
+      {/* Adiciona o componente HistoricoAcoes */}
+      <div className="mt-6">
+        <HistoricoAcoes
+          historicoAcoes={historicoAcoes}
+          mostrarHistorico={mostrarHistorico}
+          setMostrarHistorico={setMostrarHistorico}
+        />
       </div>
     </div>
   );
