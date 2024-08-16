@@ -14,7 +14,7 @@ import ResumoEvento from './Painel/ResumoEvento';
 import HistoricoDeProducao from './Painel/HistoricoDeProducao';
 import PanelCard from './shared/PanelCard';
 
-import { ChefHat, Clock, AlertTriangle, FaHamburger, CiFries, Settings, MoreVertical } from './shared/Icones'; // Certifique-se de importar os ícones corretos
+import { ChefHat, Clock, AlertTriangle, FaHamburger, CiFries, Settings, MoreVertical,User } from './shared/Icones'; // Certifique-se de importar os ícones corretos
 
 // Rest of your component code...
 
@@ -655,7 +655,7 @@ const ControleCaixaExpedicao = () => {
             </div>
           </div>
         )}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-6">
           <PanelCard
             icon={<ChefHat size={24} />}
             label="Total de Itens"
@@ -670,6 +670,14 @@ const ControleCaixaExpedicao = () => {
             }))}
             color="blue"
           />
+
+          <PanelCard
+            icon={<AlertTriangle size={24} />}
+            label="Pedidos Prioritários"
+            value={filaPedidos.filter((p) => p.prioritario).length}
+            color="red"
+          />
+
           <PanelCard
             icon={<Clock size={24} />}
             label="Tempo Médio na Fila"
@@ -689,11 +697,13 @@ const ControleCaixaExpedicao = () => {
             color="green"
           />
 
+
+          {/* Novo Card para Contagem de Pessoas */}
           <PanelCard
-            icon={<AlertTriangle size={24} />}
-            label="Pedidos Prioritários"
-            value={filaPedidos.filter((p) => p.prioritario).length}
-            color="red"
+            icon={<User size={24} />}  // Ícone de usuário para representar pessoas
+            label="Pessoas na Fila"
+            value={filaPedidos.length}  // Contagem de pessoas na fila
+            color="yellow"  // Escolha a cor desejada
           />
         </div>
       </div>
