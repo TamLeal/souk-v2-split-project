@@ -12,10 +12,10 @@ import PedidosOnHold from './Pedidos/PedidosOnHold';
 import Esquecidos from './Pedidos/Esquecidos';
 import ResumoEvento from './Painel/ResumoEvento';
 import HistoricoAcoes from './Painel/HistoricoAcoes';
+import HistoricoDeProducao from './Painel/HistoricoDeProducao';
 import PanelCard from './shared/PanelCard';
 
 import { ChefHat, Clock, AlertTriangle, FaHamburger, CiFries, Settings, MoreVertical } from './shared/Icones'; // Certifique-se de importar os ícones corretos
-
 
 // Rest of your component code...
 
@@ -64,6 +64,9 @@ const ControleCaixaExpedicao = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('todos');
   const [historicoAcoes, setHistoricoAcoes] = useState([]);
+  const [historicoProducao, setHistoricoProducao] = useState([]);
+  const [mostrarHistorico, setMostrarHistorico] = useState(false);
+  const [mostrarHistoricoProducao, setMostrarHistoricoProducao] = useState(false);
   const [configExpedicao, setConfigExpedicao] = useState({
     subidaAutomatica: false,
     tempoSubida: 15,
@@ -71,7 +74,6 @@ const ControleCaixaExpedicao = () => {
     tempoBordaPiscante: 20,
   });
   const [mostrarConfig, setMostrarConfig] = useState(false);
-  const [mostrarHistorico, setMostrarHistorico] = useState(false);
 
   useEffect(() => {
     atualizarContadorFila();
@@ -213,7 +215,7 @@ const ControleCaixaExpedicao = () => {
       alert('Por favor, insira o nome do cliente.');
       return;
     }
-
+  
     const novoPedido = {
       id: numeroPedido,
       cliente: nomeCliente,
@@ -222,10 +224,10 @@ const ControleCaixaExpedicao = () => {
       prioritario: pedidoPrioritario,
       horario: new Date().toISOString(),
     };
-
+  
     setFilaPedidos((prev) => [...prev, novoPedido]);
     setNumeroPedido((prev) => prev + 1);
-
+  
     setHistoricoVendas((prev) => {
       const novoHistorico = { ...prev };
       Object.entries(carrinho).forEach(([id, { qtd }]) => {
@@ -241,6 +243,12 @@ const ControleCaixaExpedicao = () => {
       `Pedido ${nomeCliente} #${numeroPedido} enviado para produção (${horarioAcao})`,
     ]);
 
+    // Adicionar o pedido ao histórico de produção
+    setHistoricoProducao((prev) => [
+      ...prev,
+      { pedido: numeroPedido, cliente: nomeCliente, itens: carrinho, horario: horarioAcao },
+    ]);
+  
     setCarrinho({});
     setPedidoPrioritario(false);
     setNomeCliente('');
@@ -735,7 +743,14 @@ const ControleCaixaExpedicao = () => {
         mostrarHistorico={mostrarHistorico}
         setMostrarHistorico={setMostrarHistorico}
       />
+
+      <HistoricoDeProducao
+        historicoProducao={historicoProducao}
+        mostrarHistorico={mostrarHistoricoProducao}
+        setMostrarHistorico={setMostrarHistoricoProducao}
+      />
     </div>
   );
 };
+
 export default ControleCaixaExpedicao;
