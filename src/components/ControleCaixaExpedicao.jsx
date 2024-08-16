@@ -694,29 +694,33 @@ const ControleCaixaExpedicao = () => {
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
-              className="bg-white p-6 rounded-lg shadow-md mb-8 overflow-x-auto transition-all duration-300 hover:shadow-lg flex space-x-4"
+              className="bg-white p-6 rounded-lg shadow-md mb-8 overflow-x-auto transition-all duration-300 hover:shadow-lg"
             >
-              <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                <ChefHat className="mr-2" size={24} />
-                Fila de Pedidos
-              </h2>
-              {filteredPedidos.length === 0 ? (
-                <p className="text-gray-700">Nenhum pedido na fila.</p>
-              ) : (
-                <FilaPedidos
-                  filaPedidos={filteredPedidos}
-                  moverPedido={moverPedido}
-                  togglePedidoOnHold={togglePedidoOnHold}
-                  removerPedido={removerPedido}
-                  configExpedicao={configExpedicao}
-                />
-              )}
-              {provided.placeholder}
+              <div className="mb-6">
+                <div className="flex items-center">
+                  <ChefHat className="mr-2" size={24} />
+                  <h2 className="text-xl font-bold text-gray-800">Fila de Pedidos</h2>
+                </div>
+              </div>
+              <div className="flex space-x-4">
+                {filteredPedidos.length === 0 ? (
+                  <p className="text-gray-700">Nenhum pedido na fila.</p>
+                ) : (
+                  <FilaPedidos
+                    filaPedidos={filteredPedidos}
+                    moverPedido={moverPedido}
+                    togglePedidoOnHold={togglePedidoOnHold}
+                    removerPedido={removerPedido}
+                    configExpedicao={configExpedicao}
+                  />
+                )}
+                {provided.placeholder}
+              </div>
             </div>
           )}
         </Droppable>
       </DragDropContext>
-
+      
       <div className="grid grid-cols-2 gap-6">
         <PedidosOnHold
           pedidosOnHold={pedidosOnHold}
