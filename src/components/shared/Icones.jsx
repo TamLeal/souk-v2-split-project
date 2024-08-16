@@ -17,6 +17,7 @@ import {
   ClipboardList,
   AlertTriangle,
   Zap,
+  MoreVertical,
 } from 'lucide-react';
 import { CiFries } from 'react-icons/ci';
 import { FaHamburger } from 'react-icons/fa';
@@ -45,4 +46,5 @@ export {
   FaHamburger,
   GiHamburger,
   PiHamburgerFill,
+  MoreVertical, // Adicione esta linha
 };

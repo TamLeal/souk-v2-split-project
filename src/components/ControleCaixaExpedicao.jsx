@@ -14,7 +14,7 @@ import ResumoEvento from './Painel/ResumoEvento';
 import HistoricoAcoes from './Painel/HistoricoAcoes';
 import PanelCard from './shared/PanelCard';
 
-import { ChefHat, Clock, AlertTriangle, FaHamburger, CiFries, Settings } from './shared/Icones'; // Certifique-se de importar os ícones corretos
+import { ChefHat, Clock, AlertTriangle, FaHamburger, CiFries, Settings, MoreVertical } from './shared/Icones'; // Certifique-se de importar os ícones corretos
 
 
 // Rest of your component code...
@@ -556,7 +556,7 @@ const ControleCaixaExpedicao = () => {
               onClick={() => setMostrarConfig(!mostrarConfig)}
               className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-300"
             >
-              <Settings size={24} />
+              <MoreVertical size={24} />
             </button>
           </div>
           <div className="flex items-center space-x-6">
@@ -567,15 +567,6 @@ const ControleCaixaExpedicao = () => {
               placeholder="Pesquisar pedidos..."
               className="p-2 rounded-lg shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
             />
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="p-2 rounded-lg shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-            >
-              <option value="todos">Todos</option>
-              <option value="prioritario">Prioritário</option>
-              <option value="normal">Normal</option>
-            </select>
           </div>
         </div>
         {mostrarConfig && (
