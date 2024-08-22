@@ -41,3 +41,13 @@ body {
     background-color: #ffffff;
   }
 }
+
+/* Estilos para o CircularProgressbar */
+.CircularProgressbar-text {
+  font-weight: bold;
+  font-size: 2rem !important;
+}
+
+.CircularProgressbar-trail {
+  stroke: #f3f4f6;
+}
