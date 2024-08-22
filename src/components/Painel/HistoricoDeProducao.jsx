@@ -3,7 +3,30 @@ import React, { useState } from 'react';
 const HistoricoDeProducao = ({ historicoProducao, mostrarHistorico, setMostrarHistorico }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredHistorico = historicoProducao.filter(item =>
+  // Função auxiliar para converter string de data em objeto Date
+  const parseDate = (dateString) => {
+    // Tenta primeiro o formato ISO
+    let date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      // Se falhar, tenta um formato mais específico
+      const [time, meridiem] = dateString.split(' ');
+      const [hours, minutes, seconds] = time.split(':');
+      date = new Date();
+      date.setHours(
+        meridiem === 'PM' ? parseInt(hours) + 12 : parseInt(hours),
+        parseInt(minutes),
+        parseInt(seconds)
+      );
+    }
+    return date;
+  };
+
+  // Ordenar o histórico de produção do mais recente para o mais antigo
+  const historicoOrdenado = [...historicoProducao].sort((a, b) => {
+    return parseDate(b.horario) - parseDate(a.horario);
+  });
+
+  const filteredHistorico = historicoOrdenado.filter(item =>
     item.cliente.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -32,11 +55,15 @@ const HistoricoDeProducao = ({ historicoProducao, mostrarHistorico, setMostrarHi
                   <strong>Pedido:</strong> {item.pedido} <br />
                   <strong>Cliente:</strong> {item.cliente} <br />
                   <strong>Horário:</strong> {item.horario} <br />
+                  <strong>Total:</strong> R$ {item.total.toFixed(2)} <br />
                   <strong>Itens:</strong>
                   <ul className="ml-4">
-                    {Object.entries(item.itens).map(([key, { nome, qtd }]) => (
+                    {Object.entries(item.itens).map(([key, { nome, qtd, opcionais }]) => (
                       <li key={key}>
                         {nome} x{qtd}
+                        {opcionais && opcionais.length > 0 && (
+                          <span className="text-sm text-gray-600"> (Opcionais: {opcionais.join(', ')})</span>
+                        )}
                       </li>
                     ))}
                   </ul>

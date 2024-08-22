@@ -14,9 +14,7 @@ import ResumoEvento from './Painel/ResumoEvento';
 import HistoricoDeProducao from './Painel/HistoricoDeProducao';
 import PanelCard from './shared/PanelCard';
 
-import { ChefHat, Clock, AlertTriangle, FaHamburger, CiFries, Settings, MoreVertical,User } from './shared/Icones'; // Certifique-se de importar os ícones corretos
-
-// Rest of your component code...
+import { ChefHat, Clock, AlertTriangle, FaHamburger, CiFries, Settings, MoreVertical, User } from './shared/Icones';
 
 // Dados iniciais
 const opcionais = [
@@ -74,6 +72,8 @@ const ControleCaixaExpedicao = () => {
   });
   const [mostrarConfig, setMostrarConfig] = useState(false);
 
+  // ... (useEffects e funções auxiliares virão nas próximas partes)
+
   useEffect(() => {
     atualizarContadorFila();
   }, [filaPedidos]);
@@ -90,6 +90,17 @@ const ControleCaixaExpedicao = () => {
     localStorage.setItem('numeroPedido', numeroPedido);
   }, [numeroPedido]);
 
+  useEffect(() => {
+    if (configExpedicao.subidaAutomatica) {
+      const intervalo = setInterval(() => {
+        verificarSubidaAutomatica();
+      }, 60000);
+      return () => clearInterval(intervalo);
+    }
+  }, [filaPedidos, configExpedicao]);
+
+  // ... (funções auxiliares virão na próxima parte)
+
   const calcularFaturamentoTotal = () => {
     return Object.entries(historicoVendas).reduce((total, [id, qtd]) => {
       const produto = produtos.find((p) => p.id === parseInt(id.split('-')[0]));
@@ -103,15 +114,6 @@ const ControleCaixaExpedicao = () => {
   };
 
   const faturamentoTotal = calcularFaturamentoTotal();
-
-  useEffect(() => {
-    if (configExpedicao.subidaAutomatica) {
-      const intervalo = setInterval(() => {
-        verificarSubidaAutomatica();
-      }, 60000);
-      return () => clearInterval(intervalo);
-    }
-  }, [filaPedidos, configExpedicao]);
 
   const verificarSubidaAutomatica = () => {
     const agora = new Date().getTime();
@@ -137,6 +139,8 @@ const ControleCaixaExpedicao = () => {
     });
     setContadorFila(novoContador);
   };
+
+  // ... (mais funções auxiliares virão na próxima parte)
 
   const adicionarAoCarrinho = (produto, opcionais) => {
     const chaveProduto = `${produto.id}-${opcionais.join('-')}`;
@@ -201,6 +205,8 @@ const ControleCaixaExpedicao = () => {
     });
   };
 
+  // ... (mais funções auxiliares virão na próxima parte)
+
   const apagarPedido = () => {
     if (window.confirm('Tem certeza de que deseja limpar todos os dados?')) {
       setCarrinho({});
@@ -227,25 +233,10 @@ const ControleCaixaExpedicao = () => {
     setFilaPedidos((prev) => [...prev, novoPedido]);
     setNumeroPedido((prev) => prev + 1);
 
-    setHistoricoVendas((prev) => {
-      const novoHistorico = { ...prev };
-      Object.entries(carrinho).forEach(([id, { qtd }]) => {
-        const produtoId = parseInt(id.split('-')[0]);
-        novoHistorico[produtoId] = (novoHistorico[produtoId] || 0) + qtd;
-      });
-      return novoHistorico;
-    });
-
     const horarioAcao = new Date().toLocaleTimeString();
     setHistoricoAcoes((prev) => [
       ...prev,
       `Pedido ${nomeCliente} #${numeroPedido} enviado para produção (${horarioAcao})`,
-    ]);
-
-    // Adiciona o pedido completo ao histórico de produção
-    setHistoricoProducao((prev) => [
-      ...prev,
-      { pedido: numeroPedido, cliente: nomeCliente, itens: carrinho, horario: horarioAcao },
     ]);
 
     setCarrinho({});
@@ -264,6 +255,8 @@ const ControleCaixaExpedicao = () => {
       }
     }, 0);
   };
+
+  // ... (mais funções auxiliares virão na próxima parte)
 
   const moverPedido = (sourceIndex, destinationIndex) => {
     const novosPedidos = Array.from(filaPedidos);
@@ -310,14 +303,41 @@ const ControleCaixaExpedicao = () => {
       pedidosOnHold.find((pedido) => pedido.id === id) ||
       esquecidos.find((pedido) => pedido.id === id);
 
-    setFilaPedidos((prev) => prev.filter((pedido) => pedido.id !== id));
-    setPedidosOnHold((prev) => prev.filter((pedido) => pedido.id !== id));
-    setEsquecidos((prev) => prev.filter((pedido) => pedido.id !== id));
+    if (pedidoRemovido) {
+      // Adiciona o pedido ao histórico de produção
+      setHistoricoProducao((prev) => [
+        ...prev,
+        {
+          pedido: pedidoRemovido.id,
+          cliente: pedidoRemovido.cliente,
+          itens: pedidoRemovido.itens,
+          horario: horarioAcao,
+          total: pedidoRemovido.total,
+        },
+      ]);
 
-    setHistoricoAcoes((prev) => [
-      ...prev,
-      `Pedido ${pedidoRemovido.cliente} #${id} removido da fila (${horarioAcao})`,
-    ]);
+      // Atualiza o histórico de vendas
+      setHistoricoVendas((prev) => {
+        const novoHistorico = { ...prev };
+        Object.entries(pedidoRemovido.itens).forEach(([id, { qtd }]) => {
+          const produtoId = parseInt(id.split('-')[0]);
+          novoHistorico[produtoId] = (novoHistorico[produtoId] || 0) + qtd;
+        });
+        return novoHistorico;
+      });
+
+      // Remove o pedido das listas
+      setFilaPedidos((prev) => prev.filter((pedido) => pedido.id !== id));
+      setPedidosOnHold((prev) => prev.filter((pedido) => pedido.id !== id));
+      setEsquecidos((prev) => prev.filter((pedido) => pedido.id !== id));
+
+      setHistoricoAcoes((prev) => [
+        ...prev,
+        `Pedido ${pedidoRemovido.cliente} #${id} finalizado e adicionado ao histórico (${horarioAcao})`,
+      ]);
+    } else {
+      console.error(`Pedido com ID ${id} não encontrado.`);
+    }
   };
 
   const togglePrioridade = () => {
